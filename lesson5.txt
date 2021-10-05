@@ -1,0 +1,213 @@
+/*Практическое задание по теме «Операторы, фильтрация, сортировка и ограничение»*/
+
+PS C:\Users\User\Desktop\mysql> mysql
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 13
+Server version: 8.0.26 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2021, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use vk;
+Database changed
+
+mysql> update users set created_at = null and updated_at=null;
+Query OK, 100 rows affected (0.05 sec)
+Rows matched: 100  Changed: 100  Warnings: 0
+
+mysql> select * from users;
++-----+------------+-------------+--------------------------------+-------------+------------+---------------------+
+| id  | first_name | last_name   | email                          | phone       | created_at | updated_at          |
++-----+------------+-------------+--------------------------------+-------------+------------+---------------------+
+|   1 | Stan       | Kreiger     | tamia.kuhic@example.org        | (895)564-43 | NULL       | 2021-09-30 14:43:40 |
+|   2 | Telly      | Moen        | ehauck@example.com             | 1-663-599-9 | NULL       | 2021-09-30 14:43:40 |
+|   3 | Georgianna | Hudson      | julio.daniel@example.net       | 1-913-648-6 | NULL       | 2021-09-30 14:43:40 |
+|   4 | Pattie     | Beahan      | norwood.considine@example.org  | 1-038-981-0 | NULL       | 2021-09-30 14:43:40 |
+|   5 | Gabriella  | Lind        | olson.alfonzo@example.net      | 145.373.285 | NULL       | 2021-09-30 14:43:40 |
+|   6 | Georgiana  | Gutmann     | daniel.darryl@example.net      | 1-018-446-2 | NULL       | 2021-09-30 14:43:40 |
+|   7 | Jeremy     | Friesen     | van41@example.net              | 1-270-401-1 | NULL       | 2021-09-30 14:43:40 |
+|   8 | Julia      | Mitchell    | paxton.rath@example.com        | 354-314-788 | NULL       | 2021-09-30 14:43:40 |
+|   9 | Kelly      | Mante       | dstroman@example.net           | (617)555-78 | NULL       | 2021-09-30 14:43:40 |
+|  10 | Marjolaine | Goldner     | abigayle.ward@example.org      | 214.273.432 | NULL       | 2021-09-30 14:43:40 |
+
+/*в данном случае при UPDATE updated_at принимает значение CURRENT_TIMESTAMP автоматически при обновлении, чтобы там было пусто нужно поменять описание столбца*/
+
+mysql> UPDATE users SET created_at = CURRENT_TIMESTAMP;
+Query OK, 100 rows affected (0.01 sec)
+Rows matched: 100  Changed: 100  Warnings: 0
+
+mysql> SELECT * FROM users LIMIT 10;
++----+------------+-----------+-------------------------------+-------------+---------------------+---------------------+
+| id | first_name | last_name | email                         | phone       | created_at          | updated_at          |
++----+------------+-----------+-------------------------------+-------------+---------------------+---------------------+
+|  1 | Stan       | Kreiger   | tamia.kuhic@example.org       | (895)564-43 | 2021-09-30 14:46:28 | 2021-09-30 14:46:28 |
+|  2 | Telly      | Moen      | ehauck@example.com            | 1-663-599-9 | 2021-09-30 14:46:28 | 2021-09-30 14:46:28 |
+|  3 | Georgianna | Hudson    | julio.daniel@example.net      | 1-913-648-6 | 2021-09-30 14:46:28 | 2021-09-30 14:46:28 |
+|  4 | Pattie     | Beahan    | norwood.considine@example.org | 1-038-981-0 | 2021-09-30 14:46:28 | 2021-09-30 14:46:28 |
+|  5 | Gabriella  | Lind      | olson.alfonzo@example.net     | 145.373.285 | 2021-09-30 14:46:28 | 2021-09-30 14:46:28 |
+|  6 | Georgiana  | Gutmann   | daniel.darryl@example.net     | 1-018-446-2 | 2021-09-30 14:46:28 | 2021-09-30 14:46:28 |
+|  7 | Jeremy     | Friesen   | van41@example.net             | 1-270-401-1 | 2021-09-30 14:46:28 | 2021-09-30 14:46:28 |
+|  8 | Julia      | Mitchell  | paxton.rath@example.com       | 354-314-788 | 2021-09-30 14:46:28 | 2021-09-30 14:46:28 |
+|  9 | Kelly      | Mante     | dstroman@example.net          | (617)555-78 | 2021-09-30 14:46:28 | 2021-09-30 14:46:28 |
+| 10 | Marjolaine | Goldner   | abigayle.ward@example.org     | 214.273.432 | 2021-09-30 14:46:28 | 2021-09-30 14:46:28 |
++----+------------+-----------+-------------------------------+-------------+---------------------+---------------------+
+10 rows in set (0.00 sec)
+
+mysql> CREATE TABLE users2 (  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "Идентификатор строки", first_name VARCHAR(100) NOT NULL COMMENT "Имя пользователя",  last_name VARCHAR(100) NOT NULL COMMENT "Фамилия пользователя",  email VARCHAR(100) NOT NULL UNIQUE COMMENT "Почта",  phone CHAR(11) NOT NULL UNIQUE COMMENT "Телефон",  created_at VARCHAR(50) COMMENT "Время создания строки",    updated_at VARCHAR(50) COMMENT "Время обновления строки") COMMENT "Пользователи";
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> desc users2;
++------------+--------------+------+-----+---------+----------------+
+| Field      | Type         | Null | Key | Default | Extra          |
++------------+--------------+------+-----+---------+----------------+
+| id         | int unsigned | NO   | PRI | NULL    | auto_increment |
+| first_name | varchar(100) | NO   |     | NULL    |                |
+| last_name  | varchar(100) | NO   |     | NULL    |                |
+| email      | varchar(100) | NO   | UNI | NULL    |                |
+| phone      | char(11)     | NO   | UNI | NULL    |                |
+| created_at | varchar(50)  | YES  |     | NULL    |                |
+| updated_at | varchar(50)  | YES  |     | NULL    |                |
++------------+--------------+------+-----+---------+----------------+
+7 rows in set (0.00 sec)
+
+mysql> INSERT INTO `users2` VALUES (1,'Stan','Kreiger','tamia.kuhic@example.org','(895)564-43','1972-04-11 15:18:58','1981-11-08 04:09:29'),(2,'Telly','Moen','ehauck@example.com','1-663-599-9','2014-07-08 01:44:27','1992-07-04 00:51:32');
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM user2;
+ERROR 1146 (42S02): Table 'vk.user2' doesn't exist
+mysql> SELECT * FROM users2;
++----+------------+-----------+-------------------------+-------------+---------------------+---------------------+
+| id | first_name | last_name | email                   | phone       | created_at          | updated_at          |
++----+------------+-----------+-------------------------+-------------+---------------------+---------------------+
+|  1 | Stan       | Kreiger   | tamia.kuhic@example.org | (895)564-43 | 1972-04-11 15:18:58 | 1981-11-08 04:09:29 |
+|  2 | Telly      | Moen      | ehauck@example.com      | 1-663-599-9 | 2014-07-08 01:44:27 | 1992-07-04 00:51:32 |
++----+------------+-----------+-------------------------+-------------+---------------------+---------------------+
+2 rows in set (0.00 sec)
+
+mysql> ALTER TABLE users2 MODIFY `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT "Время создания";
+Query OK, 2 rows affected (0.15 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM users2;
++----+------------+-----------+-------------------------+-------------+---------------------+---------------------+
+| id | first_name | last_name | email                   | phone       | created_at          | updated_at          |
++----+------------+-----------+-------------------------+-------------+---------------------+---------------------+
+|  1 | Stan       | Kreiger   | tamia.kuhic@example.org | (895)564-43 | 1972-04-11 15:18:58 | 1981-11-08 04:09:29 |
+|  2 | Telly      | Moen      | ehauck@example.com      | 1-663-599-9 | 2014-07-08 01:44:27 | 1992-07-04 00:51:32 |
++----+------------+-----------+-------------------------+-------------+---------------------+---------------------+
+2 rows in set (0.00 sec)
+
+mysql> DESC users2;
++------------+--------------+------+-----+-------------------+-------------------+
+| Field      | Type         | Null | Key | Default           | Extra             |
++------------+--------------+------+-----+-------------------+-------------------+
+| id         | int unsigned | NO   | PRI | NULL              | auto_increment    |
+| first_name | varchar(100) | NO   |     | NULL              |                   |
+| last_name  | varchar(100) | NO   |     | NULL              |                   |
+| email      | varchar(100) | NO   | UNI | NULL              |                   |
+| phone      | char(11)     | NO   | UNI | NULL              |                   |
+| created_at | datetime     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
+| updated_at | varchar(50)  | YES  |     | NULL              |                   |
++------------+--------------+------+-----+-------------------+-------------------+
+7 rows in set (0.00 sec)
+
+mysql> ALTER TABLE users2 MODIFY `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT "Время обновления";
+Query OK, 2 rows affected (0.13 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> DESC users2;
++------------+--------------+------+-----+-------------------+-----------------------------------------------+
+| Field      | Type         | Null | Key | Default           | Extra                                         |
++------------+--------------+------+-----+-------------------+-----------------------------------------------+
+| id         | int unsigned | NO   | PRI | NULL              | auto_increment                                |
+| first_name | varchar(100) | NO   |     | NULL              |                                               |
+| last_name  | varchar(100) | NO   |     | NULL              |                                               |
+| email      | varchar(100) | NO   | UNI | NULL              |                                               |
+| phone      | char(11)     | NO   | UNI | NULL              |                                               |
+| created_at | datetime     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED                             |
+| updated_at | datetime     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++------------+--------------+------+-----+-------------------+-----------------------------------------------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT * FROM users2;
++----+------------+-----------+-------------------------+-------------+---------------------+---------------------+
+| id | first_name | last_name | email                   | phone       | created_at          | updated_at          |
++----+------------+-----------+-------------------------+-------------+---------------------+---------------------+
+|  1 | Stan       | Kreiger   | tamia.kuhic@example.org | (895)564-43 | 1972-04-11 15:18:58 | 1981-11-08 04:09:29 |
+|  2 | Telly      | Moen      | ehauck@example.com      | 1-663-599-9 | 2014-07-08 01:44:27 | 1992-07-04 00:51:32 |
++----+------------+-----------+-------------------------+-------------+---------------------+---------------------+
+2 rows in set (0.00 sec)
+
+mysql> INSERT INTO `storehouses_products` VALUES (3, 'Конфеты', 0), (4, 'Кексы', 40);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM storehouses_products;
++----+---------+-------+
+| id | product | value |
++----+---------+-------+
+|  1 | Пирожки |    10 |
+|  2 | Рулет   |    30 |
+|  3 | Конфеты |     0 |
+|  4 | Кексы   |    40 |
++----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM storehouses_products
+    ->   ORDER BY CASE WHEN value = 0 THEN 2147483647 ELSE value END;
++----+---------+-------+
+| id | product | value |
++----+---------+-------+
+|  1 | Пирожки |    10 |
+|  2 | Рулет   |    30 |
+|  4 | Кексы   |    40 |
+|  3 | Конфеты |     0 |
+|  5 | Леденцы |     0 |
++----+---------+-------+
+5 rows in set (0.00 sec)
+
+/*Практическое задание теме «Агрегация данных»*/
+
+1. Подсчитайте средний возраст пользователей в таблице users.
+
+mysql> SELECT AVG(TIMESTAMPDIFF(YEAR, birthday, NOW())) FROM profiles;
++-------------------------------------------+
+| AVG(TIMESTAMPDIFF(YEAR, birthday, NOW())) |
++-------------------------------------------+
+|                                   25.5900 |
++-------------------------------------------+
+1 row in set (0.01 sec)
+
+2. Подсчитайте количество дней рождения, которые приходятся на каждый из дней недели. Следует учесть, что необходимы дни недели текущего года, а не года рождения.
+
+mysql> SELECT DAYNAME(CONCAT(YEAR(NOW()),'-',MONTH(birthday),'-',DAYOFMONTH(birthday))) AS dayofweek, COUNT(*) FROM profiles GROUP BY dayofweek;
++-----------+----------+
+| dayofweek | COUNT(*) |
++-----------+----------+
+| Thursday  |        7 |
+| Friday    |       15 |
+| Monday    |       16 |
+| Tuesday   |       13 |
+| Saturday  |       17 |
+| Wednesday |       19 |
+| Sunday    |       13 |
++-----------+----------+
+7 rows in set (0.00 sec)
+
+
+3. (по желанию) Подсчитайте произведение чисел в столбце таблицы.
+логарифм произведеия равен сумме логарифмов
+
+mysql> SELECT ROUND(EXP(SUM(LN(val)))) from ex;
++--------------------------+
+| ROUND(EXP(SUM(LN(val)))) |
++--------------------------+
+|                      120 |
++--------------------------+
+1 row in set (0.01 sec)
